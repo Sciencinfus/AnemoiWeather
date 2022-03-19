@@ -7,9 +7,12 @@
 {% block main %}
     <main class="container py-5 text-center">
         <div class="mb-3">
+          <form action="/addcity" id="addcity" method="post">
             <input list= "choices" autocomplete="off" autofocus class="form-control mx-auto w-auto" id="city" name="city" placeholder="City">
             <datalist id="choices">
             </datalist>
+            <button type="submit" hidden>
+            </form>
         </div>
       <script>
           let input = document.querySelector('input');
@@ -21,9 +24,9 @@
               document.querySelector("#choices").innerHTML = choices;
           });
 
+          /*
           // This event listener manages the POST action when the user chooses a value
           input.addEventListener('change', function() {
-            console.log("ouverture");
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/addcity", true);
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -31,6 +34,11 @@
             xhr.send(JSON.stringify({
                 selected: selected
             }));
+          */
+
+          // This event listener manages the POST action when the user chooses a value
+          input.addEventListener('change', function() {
+            document.getElementById('addcity').requestSubmit()
           });
 
 

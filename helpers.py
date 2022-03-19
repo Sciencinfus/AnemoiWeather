@@ -28,7 +28,7 @@ def get_filtered_cities(cities, q):
     return filtered
 
 def get_id(j):
-    m = re.search('\((.+)\)',j["selected"])
+    m = re.search('\((.+)\)',j)
     if m:
         return m.group(1)
     return ""
@@ -53,3 +53,14 @@ def get_current_weather(city, OPENWEATHER_API_KEY):
 
     # Return in JSON format
     return json.loads(response.read())
+
+def prepare_display(weather):
+    display_weather = {}
+    display_weather["city_name"] = weather["name"]
+    display_weather["current_temperature"] = celsius(weather["main"]["temp"])
+    display_weather["icon"] = "https://openweathermap.org/img/wn/" + weather["weather"][0]["icon"] + "@2x.png"
+
+    return display_weather
+
+def celsius(kelvin):
+    return f"{kelvin-273.15:.1f}"

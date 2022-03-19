@@ -6,42 +6,11 @@
 
 {% block main %}
     <main class="container py-5 text-center">
-        <table class="table tablestriped">
-        <tr>
-            <th class="text-start" scope="col">Stock symbol</th>
-            <th class="text-start" scope="col">Stock name</th>
-            <th class="text-start" scope="col">Shares</th>
-            <th class="text-end" scope="col">Price</th>
-            <th class="text-end" scope="col">Total</th>
-            <th class="text-end" scope="col">Command</th>
-        </tr>
-        {% for row in rows %}
-            <tr>
-                <td class="text-start">{{ row["symbol"] }}</td>
-                <td class="text-start">{{ row["name"] }}</td>
-                <td class="text-start">{{ row["shares"] }}</td>
-                <td class="text-end">{{ row["price"] }}</td>
-                <td class="text-end">{{ row["value"] }}</td>
-                <td class="text-end">
-                <form  method="post">
-                    <button type="submit" name="buy" value="{{ row["symbol"] }}">Buy</button>
-                    <button type="submit" name="sell" value="{{ row["symbol"] }}">Sell</button>
-                </form>
-                </td>
-            </tr>
-        {% endfor %}
-
-            <tfoot>
-                <tr>
-                    <td class="border-0 fw-bold text-end" colspan="4">Cash</td>
-                    <td class="border-0 text-end">{{ cash }}</td>
-                </tr>
-                <tr>
-                    <td class="border-0 fw-bold text-end" colspan="4">TOTAL</td>
-                    <td class="border-0 w-bold text-end">{{ grand_total }}</td>
-                </tr>
-            </tfoot>
-
-        </table>
+      {% if weather is defined %}
+          <div class="thumbnails">
+            {{ weather["city_name"] }} {{ weather["current_temperature"] }}&deg;
+            <img src="{{ weather["icon"] }}">
+          </div>
+      {% endif %}
     </main>
 {% endblock %}

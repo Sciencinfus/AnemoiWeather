@@ -21,3 +21,21 @@ nav .navbar-brand .green
 {
     color: #2e944b;
 }
+.thumbnails {
+  margin: 10px;
+  width: 300px;
+  background-color: lightgrey;
+  border-style: solid;
+  border-color: grey;
+  border-width: 2px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.item {
+  margin: 5px;
+  border-style: none;
+  border-color: grey;
+  border-width: 2px;
+  text-align: left;
+}

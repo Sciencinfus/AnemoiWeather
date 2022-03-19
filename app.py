@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request
-from helpers import get_gzipped_json, get_filtered_cities, get_id, get_city, get_current_weather
+from flask import Flask, render_template, request, redirect
+from helpers import get_gzipped_json, get_filtered_cities, get_id, get_city, get_current_weather, prepare_display
 
 # Configure application
 app = Flask(__name__)
@@ -34,17 +34,22 @@ def addcity():
     # POST
     if request.method == "POST":
 
-        # Recover id from Posted data
-        id = get_id(request.get_json(silent=True))
+        """ Recover id from Posted data """
+        id = get_id(request.form.get("city"))
 
-        # Get City data
+        """ Get City data """
         city = get_city(id, cities)
 
-        # Get City Weather
-        weather = get_current_weather(city, OPENWEATHER_API_KEY)
-        print (weather)
+        """ Get City Weather """
+        weather_json = get_current_weather(city, OPENWEATHER_API_KEY)
 
-        return render_template("index.html")
+        """ Prepare Display """
+        weather = prepare_display(weather_json)
+        print(weather)
+
+        """ Return to main page """
+        return render_template("index.html",weather=weather)
+
     # GET
     return render_template("addcity.html")
 
