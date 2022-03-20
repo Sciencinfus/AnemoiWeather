@@ -39,3 +39,14 @@ nav .navbar-brand .green
   border-width: 2px;
   text-align: left;
 }
+
+.option {
+  text-align: right;
+  width: auto;
+  margin: 0px;
+  border-style: none;
+}
+
+.thumbnails-title {
+  text-align: center;
+}

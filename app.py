@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
-from helpers import get_gzipped_json, get_filtered_cities, get_id, get_city
+from helpers import get_gzipped_json, get_filtered_cities, get_city_id, get_city
 from helpers import get_current_weather, prepare_display, recover_weathers, remenber_id
+from helpers import forget_id
 from flask_session import Session
 
 # Configure application
@@ -33,11 +34,13 @@ cities = get_gzipped_json(OPENWEATHER_CITY)
 
 @app.route("/")
 def index():
-    if session.get("id") is None:
+
+    if session.get("ids") is None:
         return render_template("index.html")
     else:
         """ Recover weathers """
-        weathers = recover_weathers(session.get("id"), cities, OPENWEATHER_API_KEY)
+        weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
+        print(weathers)
 
         """ Return to main page """
         return render_template("index.html",weathers=weathers)
@@ -49,20 +52,36 @@ def addcity():
     if request.method == "POST":
 
         """ Recover id from Posted data """
-        id = get_id(request.form.get("city"))
+        city_id = get_city_id(request.form.get("city"))
 
         """ Store City id """
-        remenber_id(id)
-        print (session["id"])
+        remenber_id(city_id)
 
         """ Recover weathers """
-        weathers = recover_weathers(id, cities, OPENWEATHER_API_KEY)
+        weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
 
         """ Return to main page """
         return render_template("index.html",weathers=weathers)
 
     # GET
     return render_template("addcity.html")
+
+@app.route("/delcity", methods=["GET", "POST"])
+def delcity():
+    print("entering del")
+    if request.method == "POST":
+
+        """ Recover id from Posted data """
+        id = request.form.get("delete")
+
+        """ Remove City id """
+        forget_id(id)
+
+        """ Recover weathers """
+        weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
+
+        """ Return to main page """
+        return render_template("index.html",weathers=weathers)
 
 @app.route("/search")
 def search():

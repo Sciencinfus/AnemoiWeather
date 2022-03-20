@@ -29,7 +29,7 @@ def get_filtered_cities(cities, q):
                 return filtered
     return filtered
 
-def get_id(j):
+def get_city_id(j):
     m = re.search('\((.+)\)',j)
     if m:
         return m.group(1)
@@ -56,35 +56,55 @@ def get_current_weather(city, OPENWEATHER_API_KEY):
     # Return in JSON format
     return json.loads(response.read())
 
-def prepare_display(weather):
+def prepare_display(weather,id):
     display_weather = {}
+    display_weather["id"] = id
     display_weather["city_name"] = weather["name"]
     display_weather["current_temperature"] = celsius(weather["main"]["temp"])
     display_weather["icon"] = "https://openweathermap.org/img/wn/" + weather["weather"][0]["icon"] + "@2x.png"
-
     return display_weather
 
 def celsius(kelvin):
     return f"{kelvin-273.15:.1f}"
 
 def remenber_id(id):
-    session["id"] = id
-    print(session["id"])
+    if session.get("ids") is None:
+        ids = []
+    else:
+        ids = session["ids"]
 
-def recover_weathers(id, cities, key):
+    if not id in ids:
+        ids.append(id)
+        session["ids"] = ids
+
+def forget_id(to_forget):
+    ids = []
+
+    print(session["ids"])
+    print(to_forget)
+    for id in session["ids"]:
+        print(id)
+        if id != to_forget:
+            ids.append(id)
+
+    print(ids)
+    session["ids"] = ids
+
+def recover_weathers(cities, key):
     weathers = []
 
-    """ Get City data """
-    city = get_city(session["id"], cities)
+    for id in session["ids"]:
+        """ Get City data """
+        city = get_city(id, cities)
 
-    """ Get City Weather """
-    weather_json = get_current_weather(city, key)
+        """ Get City Weather """
+        weather_json = get_current_weather(city, key)
 
-    """ Prepare Display """
-    weather = prepare_display(weather_json)
+        """ Prepare Display """
+        weather = prepare_display(weather_json, id)
 
-    """ Add weahther city to weathers """
-    weathers.append(weather)
+        """ Add weahther city to weathers """
+        weathers.append(weather)
 
     """ return to caller """
     return weathers

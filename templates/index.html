@@ -9,8 +9,17 @@
       {%- for weather in weathers %}
         {% if weather is defined %}
             <div class="thumbnails">
-              {{ weather["city_name"] }} {{ weather["current_temperature"] }}&deg;
-              <img src="{{ weather["icon"] }}">
+              <div class="option">
+                <form action="/delcity" method="post">
+                  <input type="hidden" value="{{ weather["id"] }}" name="delete">
+                  <button type="submit" class="btn btn-dark btn-sm" >Delete</button>
+                </form>
+              </div>
+              <p class="thumbnails-title">{{ weather["city_name"] }} </p>
+              <div>
+                <img src="{{ weather["icon"] }}">
+                {{ weather["current_temperature"] }}&deg;
+              </div>
             </div>
         {% endif %}
       {% endfor %}
