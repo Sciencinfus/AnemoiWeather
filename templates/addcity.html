@@ -24,18 +24,6 @@
               document.querySelector("#choices").innerHTML = choices;
           });
 
-          /*
-          // This event listener manages the POST action when the user chooses a value
-          input.addEventListener('change', function() {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/addcity", true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            let selected = document.getElementById('city').value;
-            xhr.send(JSON.stringify({
-                selected: selected
-            }));
-          */
-
           // This event listener manages the POST action when the user chooses a value
           input.addEventListener('change', function() {
             document.getElementById('addcity').requestSubmit()

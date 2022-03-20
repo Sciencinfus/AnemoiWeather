@@ -6,11 +6,13 @@
 
 {% block main %}
     <main class="container py-5 text-center">
-      {% if weather is defined %}
-          <div class="thumbnails">
-            {{ weather["city_name"] }} {{ weather["current_temperature"] }}&deg;
-            <img src="{{ weather["icon"] }}">
-          </div>
-      {% endif %}
+      {%- for weather in weathers %}
+        {% if weather is defined %}
+            <div class="thumbnails">
+              {{ weather["city_name"] }} {{ weather["current_temperature"] }}&deg;
+              <img src="{{ weather["icon"] }}">
+            </div>
+        {% endif %}
+      {% endfor %}
     </main>
 {% endblock %}

@@ -1,11 +1,13 @@
 from gzip import decompress
 from json import loads
+from flask import session
 import re
 
 from requests import get
 from urllib.request import urlopen
 import json
 
+from flask_session import Session
 
 def get_gzipped_json(url):
     return loads(decompress(get(url).content))
@@ -64,3 +66,25 @@ def prepare_display(weather):
 
 def celsius(kelvin):
     return f"{kelvin-273.15:.1f}"
+
+def remenber_id(id):
+    session["id"] = id
+    print(session["id"])
+
+def recover_weathers(id, cities, key):
+    weathers = []
+
+    """ Get City data """
+    city = get_city(session["id"], cities)
+
+    """ Get City Weather """
+    weather_json = get_current_weather(city, key)
+
+    """ Prepare Display """
+    weather = prepare_display(weather_json)
+
+    """ Add weahther city to weathers """
+    weathers.append(weather)
+
+    """ return to caller """
+    return weathers
