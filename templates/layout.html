@@ -21,7 +21,7 @@
     </head>
 
     <body>
-
+      {% block head %}{% endblock %}
         <nav class="bg-light border navbar navbar-expand-md navbar-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/"><span class="blue">A</span><span class="red">N</span><span class="yellow">E</span><span class="green">M</span><span class="blue">O</span><span class="green">I</span> <span class="red">Weather</span></a>
@@ -42,7 +42,8 @@
                         </ul>
                     {% else %}
                         <ul class="navbar-nav ms-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/addcity">Add City</a></li>
+                          <li class="nav-item"><a class="nav-link" href="/testpage">Test Page</a></li>
+                          <li class="nav-item"><a class="nav-link" href="/addcity">Add City</a></li>
                         </ul>
                     {% endif %}
                 </div>

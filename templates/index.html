@@ -4,24 +4,23 @@
     Index
 {% endblock %}
 
+
 {% block main %}
-    <main class="container py-5 text-center">
+<div class="item-container">
       {%- for weather in weathers %}
         {% if weather is defined %}
-            <div class="thumbnails">
-              <div class="option">
-                <form action="/delcity" method="post">
-                  <input type="hidden" value="{{ weather["id"] }}" name="delete">
-                  <button type="submit" class="btn btn-dark btn-sm" >Delete</button>
-                </form>
-              </div>
-              <p class="thumbnails-title">{{ weather["city_name"] }} </p>
-              <div>
+              <div class="item">
+                <div class="option">
+                  <form action="/delcity" method="post">
+                    <input type="hidden" value="{{ weather["id"] }}" id="delete" name="delete">
+                    <button type="submit" class="btn btn-dark btn-sm">Remove</button>
+                  </form>
+                </div>
+                <p>{{ weather["city_name"] }}</p>
                 <img src="{{ weather["icon"] }}">
                 {{ weather["current_temperature"] }}&deg;
-              </div>
             </div>
         {% endif %}
       {% endfor %}
-    </main>
+</div>
 {% endblock %}

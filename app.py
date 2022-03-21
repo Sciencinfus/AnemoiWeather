@@ -45,6 +45,7 @@ def index():
         """ Return to main page """
         return render_template("index.html",weathers=weathers)
 
+
 @app.route("/addcity", methods=["GET", "POST"])
 def addcity():
     """Add a city in the list"""
@@ -73,6 +74,7 @@ def delcity():
 
         """ Recover id from Posted data """
         id = request.form.get("delete")
+        print(id)
 
         """ Remove City id """
         forget_id(id)
