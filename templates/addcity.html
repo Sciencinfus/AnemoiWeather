@@ -1,35 +1,33 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Add City
+Add City
 {% endblock %}
 
 {% block main %}
-    <main class="container py-5 text-center">
-        <div class="mb-3">
-          <form action="/addcity" id="addcity" method="post">
-            <input list= "choices" autocomplete="off" autofocus class="form-control mx-auto w-auto" id="city" name="city" placeholder="City">
-            <datalist id="choices">
-            </datalist>
-            <button type="submit" hidden>
-            </form>
-        </div>
-      <script>
-          let input = document.querySelector('input');
+<main class="container py-5 text-center">
+  <div class="mb-3">
+    <form action="/addcity" id="addcity" method="post">
+      <input list="choices" autocomplete="off" autofocus class="form-control mx-auto w-auto" id="city" name="city" placeholder="City">
+      <datalist id="choices">
+      </datalist>
+      <button type="submit" hidden>
+    </form>
+  </div>
+  <script>
+    let input = document.querySelector('input');
 
-          // This event listener manages the upgrade of choices when the user types values
-          input.addEventListener('input', async function() {
-              let response = await fetch('/search?q=' + input.value);
-              let choices = await response.text();
-              document.querySelector("#choices").innerHTML = choices;
-          });
+    // This event listener manages the upgrade of choices when the user types values
+    input.addEventListener('input', async function() {
+      let response = await fetch('/search?q=' + input.value);
+      let choices = await response.text();
+      document.querySelector("#choices").innerHTML = choices;
+    });
 
-          // This event listener manages the POST action when the user chooses a value
-          input.addEventListener('change', function() {
-            document.getElementById('addcity').requestSubmit()
-          });
-
-
-      </script>
-    </main>
+    // This event listener manages the POST action when the user chooses a value
+    input.addEventListener('change', function() {
+      document.getElementById('addcity').requestSubmit()
+    });
+  </script>
+</main>
 {% endblock %}

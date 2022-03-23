@@ -7,20 +7,22 @@
 
 {% block main %}
 <div class="item-container">
-      {%- for weather in weathers %}
-        {% if weather is defined %}
-              <div class="item">
-                <div class="option">
-                  <form action="/delcity" method="post">
-                    <input type="hidden" value="{{ weather["id"] }}" id="delete" name="delete">
-                    <button type="submit" class="btn btn-dark btn-sm">Remove</button>
-                  </form>
-                </div>
-                <p>{{ weather["city_name"] }}</p>
-                <img src="{{ weather["icon"] }}">
-                {{ weather["current_temperature"] }}&deg;
-            </div>
-        {% endif %}
-      {% endfor %}
+  {%- for weather in weathers %}
+  {% if weather is defined %}
+  <div class="item">
+    <div class="option">
+      <form action="/delcity" method="post">
+        <input type="hidden" value="{{ weather["id"] }}" id="delete" name="delete">
+        <button type="submit" class="btn btn-dark btn-sm">Remove</button>
+      </form>
+    </div>
+    {{ weather["city_name"] }}
+    <div>
+      <img src="{{ weather["icon"] }}">
+    </div>
+    {{ weather["weather_description"] }} {{ weather["current_temperature"] }}&deg;
+  </div>
+  {% endif %}
+  {% endfor %}
 </div>
 {% endblock %}

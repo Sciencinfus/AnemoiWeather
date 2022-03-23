@@ -3,6 +3,7 @@ from helpers import get_gzipped_json, get_filtered_cities, get_city_id, get_city
 from helpers import get_current_weather, prepare_display, recover_weathers, remenber_id
 from helpers import forget_id
 from flask_session import Session
+import time
 
 # Configure application
 app = Flask(__name__)
@@ -39,8 +40,9 @@ def index():
         return render_template("index.html")
     else:
         """ Recover weathers """
+        start_time = time.time()
         weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
-        print(weathers)
+        print("--- %s seconds ---" % (time.time() - start_time))
 
         """ Return to main page """
         return render_template("index.html",weathers=weathers)
@@ -54,6 +56,8 @@ def addcity():
 
         """ Recover id from Posted data """
         city_id = get_city_id(request.form.get("city"))
+        if city_id == "Not found":
+            return render_template("addcity.html")
 
         """ Store City id """
         remenber_id(city_id)
@@ -69,12 +73,10 @@ def addcity():
 
 @app.route("/delcity", methods=["GET", "POST"])
 def delcity():
-    print("entering del")
     if request.method == "POST":
 
         """ Recover id from Posted data """
         id = request.form.get("delete")
-        print(id)
 
         """ Remove City id """
         forget_id(id)

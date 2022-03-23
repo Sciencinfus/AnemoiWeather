@@ -24,7 +24,7 @@ nav .navbar-brand .green
 }
 
 .item-container {
-  max-width: 1400px;
+  max-width: 2000px;
   background-color: #FFF;
   padding: 20px 0;
   display: flex;
@@ -51,37 +51,3 @@ nav .navbar-brand .green
   margin: 0px;
   border-style: none;
 }
-
-/*
-.thumbnails {
-  margin: 10px;
-  width: 300px;
-  background-color: lightgrey;
-  border-style: solid;
-  border-color: grey;
-  border-width: 2px;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.item {
-  margin: 5px;
-  border-style: none;
-  border-color: grey;
-  border-width: 2px;
-  text-align: left;
-}
-
-
-.thumbnails-title {
-  text-align: center;
-}
-
-.container {
-  display: flex;
-  gap: 10px;
-  gap: 10px 20px; /
-  row-gap: 10px;
-  column-gap: 20px;
-}
-*/
