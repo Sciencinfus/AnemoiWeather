@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Delete City
+{% endblock %}
+
+
+{% block main %}
+<div class="item-container">
+  {%- for weather in weathers %}
+  {% if weather is defined %}
+  <div class="item">
+    <div class="option">
+      <form action="/delcity" method="post">
+        <input type="hidden" value="{{ weather["id"] }}" id="delete" name="delete">
+        <button type="submit" class="btn btn-dark btn-sm">X</button>
+      </form>
+    </div>
+    {{ weather["city_name"] }}
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

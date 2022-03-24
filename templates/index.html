@@ -1,28 +1,30 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Index
+Index
 {% endblock %}
 
 
 {% block main %}
 <div class="item-container">
-  {%- for weather in weathers %}
+  {% for weather in weathers %}
   {% if weather is defined %}
   <div class="item">
     <div class="option">
-      <form action="/delcity" method="post">
-        <input type="hidden" value="{{ weather["id"] }}" id="delete" name="delete">
-        <button type="submit" class="btn btn-dark btn-sm">Remove</button>
+
+      <form action="/details" method="post">
+        <input type="hidden" value="{{ weather["id"] }}" id="details" name="details">
+        <button type="submit" class="btn btn-dark btn-sm">Details</button>
       </form>
     </div>
-    {{ weather["city_name"] }}
-    <div>
-      <img src="{{ weather["icon"] }}">
+
+      {{ weather["city_name"] }}
+      <div>
+        <img src="{{ weather["icon"] }}">
+      </div>
+      {{ weather["weather_description"] }} {{ weather["current_temperature"] }}&deg;
     </div>
-    {{ weather["weather_description"] }} {{ weather["current_temperature"] }}&deg;
+    {% endif %}
+    {% endfor %}
   </div>
-  {% endif %}
-  {% endfor %}
-</div>
-{% endblock %}
+  {% endblock %}

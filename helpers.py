@@ -109,8 +109,10 @@ def prepare_display(weather,id):
     display_weather["icon"] = "https://openweathermap.org/img/wn/" + weather["weather"][0]["icon"] + "@2x.png"
     display_weather["weather_description"] = weather["weather"][0]["description"]
     display_weather["feels_like"] = celsius(weather["main"]["feels_like"])
-    display_weather["wind_speed"] = str(weather["wind"]["speed"] * 3600 / 1000)
+    #display_weather["wind_speed"] = str(weather["wind"]["speed"] * 3600 / 1000)
+    display_weather["wind_speed"] = speed(weather["wind"]["speed"])
     timezone = weather["timezone"]
+    display_weather["wind_direction"] = wind_direction(weather["wind"]["deg"])
     display_weather["sunrise"] = datetime.utcfromtimestamp(weather["sys"]["sunrise"]+timezone).strftime('%H:%M')
     display_weather["sunset"] = datetime.utcfromtimestamp(weather["sys"]["sunset"]+timezone).strftime('%H:%M')
     return display_weather
@@ -118,6 +120,16 @@ def prepare_display(weather,id):
 """ Convert UTC time to local time """
 def utc_to_local(utc_dt, timezone):
     return utc_dt - timezone
+
+""" Convert wind speed for meter/second to km/h"""
+def speed(ms):
+    return f"{ms * 3600 / 1000:.1f}"
+
+""" Convert wind direction from degree to plain text """
+def wind_direction(deg):
+    index = round(deg/45)
+    text = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+    return text[index]
 
 """ celsius convert from kelvin to celsius """
 def celsius(kelvin):

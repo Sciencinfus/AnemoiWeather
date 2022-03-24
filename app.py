@@ -45,6 +45,20 @@ def index():
         """ Return to main page """
         return render_template("index.html",weathers=weathers)
 
+@app.route("/details", methods=["GET", "POST"])
+def details():
+    # POST
+    if request.method == "POST":
+
+        """ Recover id from Posted data """
+        id = request.form.get("details")
+
+        """ Recover weathers """
+        weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
+
+        """ Recover weather data """
+        return render_template("details.html",weathers=weathers,id=id)
+
 
 @app.route("/addcity", methods=["GET", "POST"])
 def addcity():
@@ -69,8 +83,11 @@ def addcity():
     # GET
     return render_template("addcity.html")
 
+
 @app.route("/delcity", methods=["GET", "POST"])
 def delcity():
+
+    # POST
     if request.method == "POST":
 
         """ Recover id from Posted data """
@@ -79,13 +96,15 @@ def delcity():
         """ Remove City id """
         forget_id(id)
 
-        """ Recover weathers """
-        #weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
-
         """ Return to main page """
-        #return render_template("index.html",weathers=weathers)
         return redirect("/")
+    #GET
+    else:
+        """ Recover weathers """
+        weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
 
+        # Display delete page
+        return render_template("delcity.html",weathers=weathers)
 
 @app.route("/search")
 def search():

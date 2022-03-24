@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Details
+{% endblock %}
+
+{% block main %}
+<div class="details-container">
+  {% for weather in weathers %}
+  {% if weather["id"] == id %}
+  <div class="item-details">
+    <div class="centered">
+      {{ weather["city_name"] }}
+      <div class="col"> <img src="{{ weather["icon"] }}"></div>
+    </div>
+    <div class="row">
+      <div class="col">Weather description</div>
+      <div class="col">{{ weather["weather_description"] }}</div>
+      <div class="w-100"></div>
+      <div class="col">Current temperature</div>
+      <div class="col">{{ weather["current_temperature"] }}&deg;</div>
+      <div class="w-100"></div>
+      <div class="col">Feels like</div>
+      <div class="col">{{ weather["feels_like"] }} &deg;</div>
+      <div class="w-100"></div>
+      <div class="col">Wind speed</div>
+      <div class="col">{{ weather["wind_speed"] }} km/h</div>
+      <div class="w-100"></div>
+      <div class="col">Wind direction</div>
+      <div class="col">{{ weather["wind_direction"] }}</div>
+      <div class="w-100"></div>
+      <div class="col">Sunrise</div>
+      <div class="col">{{ weather["sunrise"] }}</div>
+      <div class="w-100"></div>
+      <div class="col">Sunset</div>
+      <div class="col">{{ weather["sunset"] }}</div>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
