@@ -40,9 +40,7 @@ def index():
         return render_template("index.html")
     else:
         """ Recover weathers """
-        start_time = time.time()
         weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
-        print("--- %s seconds ---" % (time.time() - start_time))
 
         """ Return to main page """
         return render_template("index.html",weathers=weathers)
@@ -54,7 +52,7 @@ def addcity():
     # POST
     if request.method == "POST":
 
-        """ Recover id from Posted data """
+        """ Recover id from posted data """
         city_id = get_city_id(request.form.get("city"))
         if city_id == "Not found":
             return render_template("addcity.html")
@@ -66,7 +64,7 @@ def addcity():
         weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
 
         """ Return to main page """
-        return render_template("index.html",weathers=weathers)
+        return redirect("/")
 
     # GET
     return render_template("addcity.html")
@@ -82,10 +80,12 @@ def delcity():
         forget_id(id)
 
         """ Recover weathers """
-        weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
+        #weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
 
         """ Return to main page """
-        return render_template("index.html",weathers=weathers)
+        #return render_template("index.html",weathers=weathers)
+        return redirect("/")
+
 
 @app.route("/search")
 def search():

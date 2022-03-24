@@ -85,7 +85,7 @@ def get_current_weather(city, OPENWEATHER_API_KEY):
             return session.get(url)
 
     # If not cached or too old then recover the data from OpenWeather
-    
+
     # Get response from URL
     response = urlopen(url)
 
@@ -154,7 +154,6 @@ def recover_weathers(cities, key):
 
         """ Get City Weather """
         weather_json = get_current_weather(city, key)
-        print(weather_json)
 
         """ Prepare Display """
         weather = prepare_display(weather_json, id)
@@ -163,5 +162,4 @@ def recover_weathers(cities, key):
         weathers.append(weather)
 
     """ return to caller """
-    #newlist = sorted(list_to_be_sorted, key=lambda d: d['name'])
     return sorted(weathers, key=lambda d: d["city_name"])
