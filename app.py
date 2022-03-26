@@ -28,8 +28,6 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # TODO: Externalize the settings
 
-# TODO: Add display of hourly forecast in details view
-
 # Define Openweather API Key
 OPENWEATHER_API_KEY = "2a4682ad87a21f03c7bb1592ebe6b99d"
 
@@ -81,9 +79,12 @@ def details():
 
         """ Recover weathers """
         weathers = recover_weathers(cities, OPENWEATHER_API_KEY)
+        for weather in weathers:
+            if weather["id"] == id:
+                break
 
-        """ Recover weather data """
-        return render_template("details.html", weathers=weathers, id=id)
+        return render_template("details.html", weather=weather)
+
 
 
 @app.route("/addcity", methods=["GET", "POST"])

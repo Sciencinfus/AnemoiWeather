@@ -12,11 +12,13 @@ import re
 import json
 
 # This function returns the json response of an URL
+
+
 def get_gzipped_json(url):
     return loads(decompress(get(url).content))
 
 
-# This function return a filterd list of cities starting with the q input parameter
+# This function returns a filterd list of cities starting with the q input parameter
 def get_filtered_cities(cities, q, c):
     # Initializations
     filtered = []           # the filtered list
@@ -77,15 +79,20 @@ def get_current_weather(city, OPENWEATHER_API_KEY):
     lang = request.accept_languages.best_match(supported_languages)
 
     # Prepare URL
-    url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + \
-        "&lon=" + lon + "&appid=" + OPENWEATHER_API_KEY + "&lang=" + lang
+    # url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + \
+    #    "&lon=" + lon + "&appid=" + OPENWEATHER_API_KEY + "&lang=" + lang
+
+    exclude = "minutely,alerts"
+    url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + \
+        "&lon=" + lon + "&exclude=" + exclude + "&appid=" + \
+        OPENWEATHER_API_KEY + "&lang=" + lang
 
     # Check if data is locally cached
     if session.get(url):
         stored = session.get(url)
 
         # If data is fresher than 1000 seconds then use the cached data
-        if time.time() - stored["dt"] < 1000:
+        if time.time() - stored["current"]["dt"] < 1000:
             return session.get(url)
 
     # If not cached or too old then recover the data from OpenWeather
@@ -93,7 +100,7 @@ def get_current_weather(city, OPENWEATHER_API_KEY):
     # Get response from URL
     response = urlopen(url)
 
-    # Return in JSON format
+    # Convert to JSON format
     json_reponse = json.loads(response.read())
 
     # Store response for next time
@@ -109,24 +116,29 @@ def get_countries():
 
 
 # This function extracts from the weather data all fields that will be displayed
-def prepare_display(weather, id):
+def prepare_display(weather, id, city):
     display_weather = {}
     display_weather["id"] = id
-    display_weather["city_name"] = weather["name"]
-    display_weather["current_temperature"] = convert_temperature(
-        weather["main"]["temp"])
-    display_weather["icon"] = "https://openweathermap.org/img/wn/" + \
-        weather["weather"][0]["icon"] + "@2x.png"
-    display_weather["weather_description"] = weather["weather"][0]["description"]
-    display_weather["feels_like"] = convert_temperature(
-        weather["main"]["feels_like"])
-    display_weather["wind_speed"] = speed(weather["wind"]["speed"])
-    timezone = weather["timezone"]
-    display_weather["wind_direction"] = wind_direction(weather["wind"]["deg"])
-    display_weather["sunrise"] = datetime.utcfromtimestamp(
-        weather["sys"]["sunrise"] + timezone).strftime('%H:%M')
-    display_weather["sunset"] = datetime.utcfromtimestamp(
-        weather["sys"]["sunset"] + timezone).strftime('%H:%M')
+    display_weather["city_name"] = city["name"]
+    display_weather["current_temp"] = temp(weather["current"]["temp"])
+    display_weather["icon"] = "https://openweathermap.org/img/wn/" + weather["current"]["weather"][0]["icon"] + "@2x.png"
+    display_weather["weather_description"] = weather["current"]["weather"][0]["description"]
+    display_weather["feels_like"] = temp(weather["current"]["feels_like"])
+    display_weather["wind_speed"] = speed(weather["current"]["wind_speed"])
+    timezone = weather["timezone_offset"]
+    display_weather["wind_direction"] = wind_direction(weather["current"]["wind_deg"])
+    display_weather["sunrise"] = datetime.utcfromtimestamp(weather["current"]["sunrise"] + timezone).strftime('%H:%M')
+    display_weather["sunset"] = datetime.utcfromtimestamp(weather["current"]["sunset"] + timezone).strftime('%H:%M')
+    tmp = []
+    # Store the hourly weather for next 24h (every 3 hours)
+    for i in range(1, 25, 3):
+        h = weather["hourly"][i]
+        hourly_data = {}
+        hourly_data["time"] = datetime.utcfromtimestamp(h["dt"] + timezone).strftime('%H:%M')
+        hourly_data["temp"] = temp(h["temp"])
+        hourly_data["icon"] = "https://openweathermap.org/img/wn/" + h["weather"][0]["icon"] + "@2x.png"
+        tmp.append(hourly_data)
+    display_weather["hourly"] = tmp
     return display_weather
 
 
@@ -147,8 +159,8 @@ def wind_direction(deg):
     return text[index]
 
 
-# This function converts from kelvin to convert_temperature
-def convert_temperature(kelvin):
+# This function converts from kelvin to temp
+def temp(kelvin):
     if session.get("unit") == "C":
         return f"{kelvin-273.15:.1f}"
     else:
@@ -190,7 +202,7 @@ def recover_weathers(cities, key):
         weather_json = get_current_weather(city, key)
 
         """ Prepare Display """
-        weather = prepare_display(weather_json, id)
+        weather = prepare_display(weather_json, id, city)
 
         """ Add weahther city to weathers """
         weathers.append(weather)

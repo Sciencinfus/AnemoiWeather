@@ -5,9 +5,8 @@ Details
 {% endblock %}
 
 {% block main %}
+<!-- current details -->
 <div class="details-container">
-  {% for weather in weathers %}
-  {% if weather["id"] == id %}
   <div class="item-details">
     <div class="centered">
       {{ weather["city_name"] }}
@@ -18,7 +17,7 @@ Details
       <div class="col">{{ weather["weather_description"] }}</div>
       <div class="w-100"></div>
       <div class="col">Current temperature</div>
-      <div class="col">{{ weather["current_temperature"] }}&deg;</div>
+      <div class="col">{{ weather["current_temp"] }}&deg;</div>
       <div class="w-100"></div>
       <div class="col">Feels like</div>
       <div class="col">{{ weather["feels_like"] }}&deg;</div>
@@ -36,8 +35,31 @@ Details
       <div class="col">{{ weather["sunset"] }}</div>
     </div>
   </div>
-
-  {% endif %}
-  {% endfor %}
 </div>
+
+<!-- Hourly data -->
+<div class="details-container">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        {% for h in weather["hourly"] %}
+          <th scope="col">{{ h["time"] }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for h in weather["hourly"] %}
+          <td scope="col">{{ h["temp"] }}&deg;</td>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for h in weather["hourly"] %}
+          <td scope="col"><img src="{{ h["icon"] }}"></td>
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 {% endblock %}
