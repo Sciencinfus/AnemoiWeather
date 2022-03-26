@@ -2,23 +2,22 @@ from gzip import decompress
 from json import loads
 from flask import session, request
 from datetime import datetime, timezone
-import time
-
-
-import re
-
 from requests import get
 from urllib.request import urlopen
-import json
-
 from flask_session import Session
 
-""" get_gzipped_json returns the json respone of an URL """
+import time
+import pycountry
+import re
+import json
+
+# This function returns the json response of an URL
 def get_gzipped_json(url):
     return loads(decompress(get(url).content))
 
-""" get_filtered_cities return a filterd list of cities starting with the q input parameter """
-def get_filtered_cities(cities, q):
+
+# This function return a filterd list of cities starting with the q input parameter
+def get_filtered_cities(cities, q, c):
     # Initializations
     filtered = []           # the filtered list
     max_to_return = 20      # max numnber of entries to return
@@ -26,43 +25,47 @@ def get_filtered_cities(cities, q):
     # Iterated on all cities
     for city in cities:
         if city["name"].lower().startswith(q.lower()):
-            value = city["name"]
-            value += "-" + city["country"]
+            if c == "" or c == city["country"]:
+                value = city["name"]
+                value += "-" + city["country"]
 
-            # Filter the double entries in list of cities
-            already_added = False
-            for f in filtered:
-                if f.startswith(value):
-                    already_added = True
+                # Filter the double entries in list of cities
+                already_added = False
+                for f in filtered:
+                    if f.startswith(value):
+                        already_added = True
 
-            # If not already found add it
-            if not already_added:
-                if city["state"]:
-                    value += "-" + city["state"]
-                value += " (" + str(city["id"]) + ")"
-                filtered.append(value)
+                # If not already found add it
+                if not already_added:
+                    if city["state"]:
+                        value += "-" + city["state"]
+                    value += " (" + str(city["id"]) + ")"
+                    filtered.append(value)
 
-            # If maximum reached return to caller
-            if len(filtered) == max_to_return:
-                return filtered
+                # If maximum reached return to caller
+                if len(filtered) == max_to_return:
+                    return filtered
     return filtered
 
-""" get_city_id extracts city ID from the string displayed to the user """
+
+# This function extracts city ID from the string displayed to the user
 def get_city_id(j):
-    m = re.search('\((.+)\)',j)
+    m = re.search('\((.+)\)', j)
     if m:
         return m.group(1)
     # If no match then return "Not found"
     return "Not found"
 
-""" get_city returns the city that match the city ID """
+
+# This function returns the city that match the city ID
 def get_city(id, cities):
     for city in cities:
         if str(city["id"]) == id:
             return city
     return {}
 
-""" get_current_weather returns the weather of a city """
+
+# This function returns the weather of a city
 def get_current_weather(city, OPENWEATHER_API_KEY):
 
     # Extract lat and lon from city
@@ -74,7 +77,8 @@ def get_current_weather(city, OPENWEATHER_API_KEY):
     lang = request.accept_languages.best_match(supported_languages)
 
     # Prepare URL
-    url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + OPENWEATHER_API_KEY + "&lang=" + lang
+    url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + \
+        "&lon=" + lon + "&appid=" + OPENWEATHER_API_KEY + "&lang=" + lang
 
     # Check if data is locally cached
     if session.get(url):
@@ -99,43 +103,59 @@ def get_current_weather(city, OPENWEATHER_API_KEY):
     return json_reponse
 
 
+# This function returns an array of all country codes in cities
+def get_countries():
+    return list(pycountry.countries)
 
-""" prepare_display extracts from the weather data all fields that will be displayed """
-def prepare_display(weather,id):
+
+# This function extracts from the weather data all fields that will be displayed
+def prepare_display(weather, id):
     display_weather = {}
     display_weather["id"] = id
     display_weather["city_name"] = weather["name"]
-    display_weather["current_temperature"] = celsius(weather["main"]["temp"])
-    display_weather["icon"] = "https://openweathermap.org/img/wn/" + weather["weather"][0]["icon"] + "@2x.png"
+    display_weather["current_temperature"] = convert_temperature(
+        weather["main"]["temp"])
+    display_weather["icon"] = "https://openweathermap.org/img/wn/" + \
+        weather["weather"][0]["icon"] + "@2x.png"
     display_weather["weather_description"] = weather["weather"][0]["description"]
-    display_weather["feels_like"] = celsius(weather["main"]["feels_like"])
-    #display_weather["wind_speed"] = str(weather["wind"]["speed"] * 3600 / 1000)
+    display_weather["feels_like"] = convert_temperature(
+        weather["main"]["feels_like"])
     display_weather["wind_speed"] = speed(weather["wind"]["speed"])
     timezone = weather["timezone"]
     display_weather["wind_direction"] = wind_direction(weather["wind"]["deg"])
-    display_weather["sunrise"] = datetime.utcfromtimestamp(weather["sys"]["sunrise"]+timezone).strftime('%H:%M')
-    display_weather["sunset"] = datetime.utcfromtimestamp(weather["sys"]["sunset"]+timezone).strftime('%H:%M')
+    display_weather["sunrise"] = datetime.utcfromtimestamp(
+        weather["sys"]["sunrise"] + timezone).strftime('%H:%M')
+    display_weather["sunset"] = datetime.utcfromtimestamp(
+        weather["sys"]["sunset"] + timezone).strftime('%H:%M')
     return display_weather
 
-""" Convert UTC time to local time """
+
+# This function converts UTC time to local time
 def utc_to_local(utc_dt, timezone):
     return utc_dt - timezone
 
-""" Convert wind speed for meter/second to km/h"""
+
+# This function converts wind speed for meter/second to km/h
 def speed(ms):
     return f"{ms * 3600 / 1000:.1f}"
 
-""" Convert wind direction from degree to plain text """
+
+# This function converts wind direction from degree to plain text
 def wind_direction(deg):
-    index = round(deg/45)
-    text = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+    index = round(deg / 45)
+    text = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"]
     return text[index]
 
-""" celsius convert from kelvin to celsius """
-def celsius(kelvin):
-    return f"{kelvin-273.15:.1f}"
 
-""" remenber_id store a city ID in the session data """
+# This function converts from kelvin to convert_temperature
+def convert_temperature(kelvin):
+    if session.get("unit") == "C":
+        return f"{kelvin-273.15:.1f}"
+    else:
+        return f"{((kelvin-273.15)*1.8)+32:.1f}"
+
+
+# This function stores a city ID in the session data
 def remenber_id(id):
     if session.get("ids") is None:
         ids = []
@@ -146,7 +166,8 @@ def remenber_id(id):
         ids.append(id)
         session["ids"] = ids
 
-""" forget_id remove a city ID from the session data """
+
+# This function removes a city ID from the session data
 def forget_id(to_forget):
     ids = []
 
@@ -156,7 +177,8 @@ def forget_id(to_forget):
 
     session["ids"] = ids
 
-""" recover_weathers retrieve the weather of all city ID stored in the session data """
+
+# This function retrieves the weather of all city ID stored in the session data
 def recover_weathers(cities, key):
     weathers = []
 

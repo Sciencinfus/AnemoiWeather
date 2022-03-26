@@ -26,7 +26,7 @@ nav .navbar-brand .green
 .item-container {
   max-width: 2000px;
   background-color: #FFF;
-  padding: 20px 0;
+  padding: 50px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -76,4 +76,8 @@ nav .navbar-brand .green
   width: auto;
   margin: 0px;
   border-style: none;
+}
+
+.input-box {
+  margin: 10px;
 }

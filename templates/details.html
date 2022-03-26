@@ -21,7 +21,7 @@ Details
       <div class="col">{{ weather["current_temperature"] }}&deg;</div>
       <div class="w-100"></div>
       <div class="col">Feels like</div>
-      <div class="col">{{ weather["feels_like"] }} &deg;</div>
+      <div class="col">{{ weather["feels_like"] }}&deg;</div>
       <div class="w-100"></div>
       <div class="col">Wind speed</div>
       <div class="col">{{ weather["wind_speed"] }} km/h</div>
@@ -36,6 +36,7 @@ Details
       <div class="col">{{ weather["sunset"] }}</div>
     </div>
   </div>
+
   {% endif %}
   {% endfor %}
 </div>

@@ -8,19 +8,30 @@ Add City
 <main class="container py-5 text-center">
   <div class="mb-3">
     <form action="/addcity" id="addcity" method="post">
-      <input list="choices" autocomplete="off" autofocus class="form-control mx-auto w-auto" id="city" name="city" placeholder="City">
-      <datalist id="choices">
-      </datalist>
-      <button type="submit" hidden>
+      <div class="input-box">
+        <input list="countries" autocomplete="off" autofocus class="form-control mx-auto w-auto" id="country" name="country" placeholder="Country">
+        <datalist id="countries">
+          {% for country in countries %}
+          <option value="{{ country["alpha_2"] }}">{{ country["name"] }}</ /option>
+            {% endfor %}
+        </datalist>
+      </div>
+      <div class="input-box">
+        <input list="choices" autocomplete="off" autofocus class="form-control mx-auto w-auto" id="city" name="city" placeholder="City">
+        <datalist id="choices">
+        </datalist>
+        <button type="submit" hidden>
+      </div>
     </form>
   </div>
 
   <script>
-    let input = document.querySelector('input');
+    let input = document.querySelector('#city');
+    let country = document.querySelector('#country');
 
     // This event listener manages the upgrade of choices when the user types values
     input.addEventListener('input', async function() {
-      let response = await fetch('/search?q=' + input.value);
+      let response = await fetch('/search?q=' + input.value + "&c=" + country.value);
       let choices = await response.text();
       document.querySelector("#choices").innerHTML = choices;
     });
