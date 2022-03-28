@@ -2,7 +2,7 @@
 
 This project is the final assignment done in the frame of the 2022 CS50's Introduction to Computer Science.
 
-My software enables its users to display general and detailed weather data related to a set of cities.
+My software enables users to display general and detailed weather data related to a set of cities.
 
 I have made the project alone without the help of others classmates.
 
@@ -19,7 +19,7 @@ The following functionalities are implemented:
 - Index page that displays the set of selected cities with the main data weathers
 - Detail page that displays more detailed weather data about a city with the next 24h forecast
 - Addition of a new city
-- Deletion of a existing city
+- Deletion of an existing city
 - Unit used for display temperatures (Celsius/Fahrenheit)
 
 # Technical Architecture
