@@ -1,8 +1,12 @@
 Flask
 Flask-Session
-requests
-time
+datetime
+flask
+flask_session
 gzip
 json
-datetime
 pycountry
+re
+requests
+time
+urllib.request

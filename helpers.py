@@ -12,8 +12,6 @@ import re
 import json
 
 # This function returns the json response of an URL
-
-
 def get_gzipped_json(url):
     return loads(decompress(get(url).content))
 
