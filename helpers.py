@@ -72,19 +72,10 @@ def get_current_weather(city, OPENWEATHER_API_KEY):
     lat = str(city["coord"]["lat"])
     lon = str(city["coord"]["lon"])
 
-    # Search prefered language
-    # supported_languages = ["en", "nl", "it", "fr"]
-    # lang = request.accept_languages.best_match(supported_languages)
-
-    # Prepare URL
-    # url = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + \
-    #    "&lon=" + lon + "&appid=" + OPENWEATHER_API_KEY + "&lang=" + lang
-
     exclude = "minutely,alerts"
     url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + \
         "&lon=" + lon + "&exclude=" + exclude + "&appid=" + \
         OPENWEATHER_API_KEY
-        #+ "&lang=" + lang
 
     # Check if data is locally cached
     if session.get(url):

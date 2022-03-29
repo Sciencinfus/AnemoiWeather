@@ -86,7 +86,6 @@ def details():
         return render_template("details.html", weather=weather)
 
 
-
 @app.route("/addcity", methods=["GET", "POST"])
 def addcity():
     """Add a city in the list"""
