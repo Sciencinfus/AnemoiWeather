@@ -3,10 +3,5 @@ Flask-Session
 datetime
 flask
 flask_session
-gzip
-json
 pycountry
-re
 requests
-time
-urllib.request
